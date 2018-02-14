@@ -1,0 +1,26 @@
+security:
+  basic:
+    enabled: true
+wicket:
+  stuff:
+    datastore:
+      hazelcast:
+        enabled: false
+  core:
+    resourcesettings:
+      packageresourceguard:
+        pattern:
+        - +*.map
+server:
+  compression:
+    enabled: true
+management:
+  port: 8081
+  security:
+    enabled: false
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+liquibase:
+  change-log: classpath:/db/changelog/db.changelog-master.xml
