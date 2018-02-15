@@ -34,118 +34,13 @@ public class HomePage extends BasePage {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected List<String> localeNames;
-	protected DropDownChoice<String> localeDDC;
-	protected Image logoImage = null;
-	private Link<String> loginLink;
-	private Link<String> cabinetLink;
-	private Link<String> logoutLink;
 
-	@SpringBean(name = "serverConfig")
-	private Properties serverConfigProp;
 
 	public HomePage() {
-		createPage();
+		
 	}
 
-	private void createPage() {
-		getTitle().setDefaultModel(Model.of("Home Page"));
-		add(new Label("serverLabel", new ResourceModel("serverLabel")));
-		add(new Label("serverName",
-				Model.of(" " + serverConfigProp.getProperty("serverName", "serverName key not Set"))));
-		createLocalesDCC();
-		createHeaderLinks();
 
-	}
 
-	private void createHeaderLinks() {
-		loginLink = new Link<String>("loginLink", new ResourceModel("loginLink")) {
 
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick() {
-				setResponsePage(LoginPage.class);
-			}
-		};
-
-		logoutLink = new Link<String>("logoutLink") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick() {
-				setResponsePage(LoginPage.class);
-			}
-		};
-
-		cabinetLink = new Link<String>("cabinetLink") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick() {
-				setResponsePage(LoginPage.class);
-			}
-		};
-		loginLink.add(new Label("label", new ResourceModel("loginLink")));
-		logoutLink.add(new Label("label", new ResourceModel("logoutLink"))).setVisible(false);
-		cabinetLink.add(new Label("label", new ResourceModel("cabinetLink"))).setVisible(false);
-
-		add(loginLink, logoutLink, cabinetLink);
-
-	}
-
-	private void createLocalesDCC() {
-		List<Locale> locales = Arrays.asList(Locale.ENGLISH, new Locale("ru"));
-
-		final DropDownChoice<Locale> localeDDCSelection = new DropDownChoice<Locale>("changeLocale",
-				new Model<Locale>(), locales, getLocalesChoiseRenderer());
-		localeDDCSelection.add(new OnChangeAjaxBehavior() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
-				Session.get().setLocale(localeDDCSelection.getModelObject());
-				target.add(HomePage.this);
-			}
-		});
-		localeDDCSelection.setModelObject(Session.get().getLocale());
-		add(localeDDCSelection);
-	}
-
-	private IChoiceRenderer<Locale> getLocalesChoiseRenderer() {
-		return new IChoiceRenderer<Locale>() {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Object getDisplayValue(Locale object) {
-				String displayValue = object.getDisplayLanguage(object);
-				return displayValue.substring(0, 1).toUpperCase() + displayValue.substring(1);
-			}
-
-			@Override
-			public String getIdValue(Locale object, int index) {
-				return object.getDisplayLanguage();
-			}
-
-			@Override
-			public Locale getObject(String id, IModel<? extends List<? extends Locale>> choices) {
-				List<? extends Locale> _choices = choices.getObject();
-				for (int index = 0; index < _choices.size(); index++) {
-					// Get next choice
-					final Locale choice = _choices.get(index);
-					if (getIdValue(choice, index).equals(id)) {
-						return choice;
-					}
-				}
-				return null;
-			}
-		};
-
-	}
 }
