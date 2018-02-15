@@ -6,15 +6,27 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceReference;
 
 public abstract class BasePage extends WebPage {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private MarkupContainer defaultModal;
+	private Label title;
 	
+	public Label getTitle() {
+		return title;
+	}
+
+
 	public BasePage(PageParameters params){
 		super(params);
 		initPage();
@@ -28,6 +40,8 @@ public abstract class BasePage extends WebPage {
 		defaultModal = new EmptyPanel("defaultModal");
 		defaultModal.setOutputMarkupId(true);
 		add(defaultModal);
+		title = new Label("title", "Minecraft Subscribe Service");
+		add(title);
 	}
 	
 	public void replaceDefaultModal(ModalWindow newModal){
@@ -47,6 +61,8 @@ public abstract class BasePage extends WebPage {
 		String bootstrapPrefixPath = "bootstrap/current";
 		response.render(JavaScriptHeaderItem.forReference(new WebjarsJavaScriptResourceReference(bootstrapPrefixPath + "/js/bootstrap.js")));
 		response.render(CssHeaderItem.forReference(new WebjarsJavaScriptResourceReference(bootstrapPrefixPath + "/css/bootstrap.css")));
+	
+		response.render(CssHeaderItem.forReference(new CssResourceReference(BasePage.class, "../css/style.css")));
 	}
 
 }

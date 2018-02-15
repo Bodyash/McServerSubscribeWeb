@@ -1,26 +1,19 @@
 package com.bodyash.spring.boot.wicket.minecraft.beans;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.JarURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.tomcat.util.scan.JarFileUrlJar;
-import org.apache.wicket.util.file.Files;
 
 public class ExternalPropertiesFileConfig {
 
-	Properties prop;
+	private Properties prop;
 	private final static String CONFIG_FILE_NAME = "serverConfig.properties";
 
 	public ExternalPropertiesFileConfig() {
@@ -29,15 +22,37 @@ public class ExternalPropertiesFileConfig {
 		if (!propExtFile.exists()) {
 			try {
 				ExportResource(propExtFile);
+				loadFileToProperties(prop, propExtFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else {
+			loadFileToProperties(prop, propExtFile);
+		}
+	}
+
+	private void loadFileToProperties(Properties prop, File propFile) {
+		if (propFile.canRead()) {
+			try (FileInputStream fis = new FileInputStream(propFile)){
+				prop.load(new InputStreamReader(fis, Charset.forName("UTF-8")));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		
 	}
 
-	public void ExportResource(File externalFile) throws Exception {
-		InputStream in = this.getClass().getResourceAsStream("/"+CONFIG_FILE_NAME);
-		IOUtils.copy(in, new FileOutputStream(new File(CONFIG_FILE_NAME))); 
+	private void ExportResource(File externalFile) throws Exception {
+		try (InputStream in = this.getClass().getResourceAsStream("/"+CONFIG_FILE_NAME); OutputStream out = new FileOutputStream(new File(CONFIG_FILE_NAME))){
+			IOUtils.copy(in, out); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public Properties getProperties() {
+		return prop;
 	}
 
 }

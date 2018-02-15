@@ -1,5 +1,7 @@
 package com.bodyash.spring.boot.wicket.minecraft;
 
+import java.util.Properties;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,7 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.bodyash.spring.boot.wicket.minecraft.beans.ExternalPropertiesFileConfig;
 import com.bodyash.spring.boot.wicket.minecraft.service.MinecraftUserDetailService;
 
 
@@ -16,7 +19,7 @@ import com.bodyash.spring.boot.wicket.minecraft.service.MinecraftUserDetailServi
 @ComponentScan("com.spring.boot.wicket.minecraft")
 public class SpringBeansCustomBeansConfig extends WebMvcConfigurerAdapter{
 	
-
+	private ExternalPropertiesFileConfig epfc;
 	
 	@Bean
 	AuthenticationProvider authenticationProvider() {
@@ -34,6 +37,16 @@ public class SpringBeansCustomBeansConfig extends WebMvcConfigurerAdapter{
 	@Bean
 	Object passwordEncoder() {
 		return new Md5PasswordEncoder();
+	}
+	
+	
+	//Beans for WEB PAGES
+	@Bean(name="serverConfig")
+	Properties serverConfig() {
+		if (epfc == null) {
+			epfc = new ExternalPropertiesFileConfig();
+		}
+		return epfc.getProperties();
 	}
 
 }
