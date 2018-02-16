@@ -1,7 +1,5 @@
 package com.bodyash.spring.boot.wicket.minecraft;
 
-import java.util.Properties;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -42,11 +40,11 @@ public class SpringBeansCustomBeansConfig extends WebMvcConfigurerAdapter{
 	
 	//Beans for WEB PAGES
 	@Bean(name="serverConfig")
-	Properties serverConfig() {
+	ExternalPropertiesFileConfig serverConfig() {
 		if (epfc == null) {
 			epfc = new ExternalPropertiesFileConfig();
 		}
-		return epfc.getProperties();
+		return epfc;
 	}
 
 }

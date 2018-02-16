@@ -7,7 +7,6 @@
 	<div wicket:id="defaultModal"></div>
 <!-- Navbar -->
 	<nav class="navbar navbar-expand-md navbar-dark bg-primary">
-		<div class="container-fluid">
 		<a class="navbar-brand" href="#"> <img
 			src="https://www.shareicon.net/download/128x128//2015/08/19/87358_bucket_512x512.png"
 			width="30" height="30" class="d-inline-block align-top" alt="">
@@ -27,7 +26,6 @@
 			</ul>
 			<!-- Right NavBar -->
 			<ul class="navbar-nav ml-auto">
-				<li><select wicket:id="changeLocale" class="form-control"></select></li>
 				<li><a wicket:id="loginLink" class="nav-link active"><span
 						class="glyphicon glyphicon-log-in" aria-hidden="true"></span> <span
 						wicket:id="label"></span></a></li>
@@ -37,9 +35,10 @@
 				<li><a wicket:id="logoutLink" class="nav-link active"><span
 						class="glyphicon glyphicon-log-in" aria-hidden="true"></span> <span
 						wicket:id="label"></span></a></li>
+				<li><select wicket:id="changeLocale" class="form-control"></select></li>
 			</ul>
 		</div><!-- Dispayed navbar, that colapsing on screen size md -->
-		</div><!-- Container Foolid -->
+		<!-- Container Foolid -->
 	</nav>
 
 	<!-- /.container-fluid -->

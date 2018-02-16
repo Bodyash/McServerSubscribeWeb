@@ -3,7 +3,6 @@ package com.bodyash.spring.boot.wicket.minecraft.web.pages;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
@@ -11,7 +10,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.head.CssUrlReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
@@ -28,6 +26,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import com.bodyash.spring.boot.wicket.minecraft.beans.ExternalPropertiesFileConfig;
 import com.bodyash.spring.boot.wicket.minecraft.web.pages.login.LoginPage;
 
 import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceReference;
@@ -48,7 +47,7 @@ public abstract class BasePage extends WebPage {
 	private Link<String> logoutLink;
 
 	@SpringBean(name = "serverConfig")
-	private Properties serverConfigProp;
+	private ExternalPropertiesFileConfig serverConfig;
 	
 	public Label getTitle() {
 		return title;
@@ -72,7 +71,7 @@ public abstract class BasePage extends WebPage {
 		add(title);
 		getTitle().setDefaultModel(Model.of("Home Page"));
 		add(new Label("serverName",
-				Model.of(" " + serverConfigProp.getProperty("serverName", "serverName key not Set"))));
+				Model.of(" " + serverConfig.getProperties().getProperty("serverName", "serverName key not Set"))));
 		createLocalesDCC();
 		createHeaderLinks();
 	}
@@ -181,13 +180,19 @@ public abstract class BasePage extends WebPage {
 		response.render(JavaScriptHeaderItem.forReference(getApplication().getJavaScriptLibrarySettings().getWicketAjaxReference()));
 		
 		String bootstrapPrefixPath = "bootstrap/current";
+//		String bootstrapSelectPrefixPath = "bootstrap-select/current";
 //		response.render(new CssUrlReferenceHeaderItem("https://bootswatch.com/4/flatly/bootstrap.css", null, null));
 //		response.render(new CssUrlReferenceHeaderItem("https://bootswatch.com/4/flatly/_variables.scss", null, null));
 //		response.render(new CssUrlReferenceHeaderItem("https://bootswatch.com/4/flatly/_bootswatch.scss", null, null));
         response.render(JavaScriptHeaderItem.forReference(new WebjarsJavaScriptResourceReference(bootstrapPrefixPath + "/js/bootstrap.js")));
 		response.render(CssHeaderItem.forReference(new WebjarsJavaScriptResourceReference(bootstrapPrefixPath + "/css/bootstrap.css")));
+//      response.render(JavaScriptHeaderItem.forReference(new WebjarsJavaScriptResourceReference(bootstrapSelectPrefixPath + "/dist/js/bootstrap-select.js")));
+//		response.render(CssHeaderItem.forReference(new WebjarsJavaScriptResourceReference(bootstrapSelectPrefixPath + "/dist/css/bootstrap-select.css")));
 		//response.render(CssHeaderItem.forReference(new WebjarsJavaScriptResourceReference(bootstrapPrefixPath + "/css/bootstrap-dark.css")));
 		response.render(CssHeaderItem.forReference(new CssResourceReference(BasePage.class, "../css/style.css")));
 	}
 
+	protected ExternalPropertiesFileConfig getServerConfig() {
+		return serverConfig;
+	}
 }
