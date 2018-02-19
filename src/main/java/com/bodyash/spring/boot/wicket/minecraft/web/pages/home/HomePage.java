@@ -37,7 +37,7 @@ public class HomePage extends BasePage {
 
 
 	public HomePage() {
-		
+		getTitle().setDefaultModel(Model.of("Home Page"));
 	}
 
 

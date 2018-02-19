@@ -1,27 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
-	<head>
-		<meta charset="utf-8" />
-		<title>Spring Boot - Apache Wicket Quickstart</title>
-
-	</head>
-	<body>
 		<wicket:extend>
-		<h2>Login</h2>
-		<form wicket:id="loginForm">
-			<div wicket:id="feedback"></div>
-			<p>
-				<label>Ваш ник на сервере:</label>
-				<input type="text" wicket:id="username" />
-			</p>
-			<p>
-				<label>Ваш Пароль:</label>
-				<input type="password" wicket:id="password" />
-			</p>
-			<input type="submit" value="Login" />
-			<hr>
-			<p class="help-block"><b>Username & Password</b>: admin</p>
-		</form>
+			<div class="container">
+			 <div class="card card-container">
+				<form wicket:id="loginForm" class="form-signin">
+					<div wicket:id="feedback"></div>
+					<h1 class="signUpTitle">Login Form</h1>
+					<span class="glyphicon glyphicon-user"></span><input type="text" wicket:id="username" class="form-control" required="required" autofocus="autofocus"/> 
+					<input type="password" wicket:id="password" class="form-control" required="required"/> 
+					<div id="remember" class="checkbox">
+                    <label>
+                        <input type="checkbox" value="remember-me"> Remember me
+                    </label>
+               		 </div>
+					<input type="submit" wicket:id="submitBtn" />
+						<a href="signup">Or SignUp</a>
+				</form>
+			</div>
+			</div>
 		</wicket:extend>
-	</body>
 </html>

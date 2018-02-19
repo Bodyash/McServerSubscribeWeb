@@ -43,7 +43,7 @@ public class WicketWebSecurityAdapterConfig extends WebSecurityConfigurerAdapter
         .antMatchers("/home/**").permitAll()
         .antMatchers("/adminpanel/**").access("hasRole('ADMIN')")
         .antMatchers("/cabinet").access("hasRole('USER')or hasRole('ADMIN')")
-        .and().formLogin().loginPage("/login").failureUrl("/login?error")
+        //.and().formLogin().loginPage("/login").failureUrl("/login?error")
         .and().exceptionHandling().accessDeniedPage("/403");
 	}
 

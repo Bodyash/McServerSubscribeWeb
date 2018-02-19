@@ -4,9 +4,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxPreventSubmitBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -15,6 +21,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.Link;
@@ -38,6 +45,7 @@ public abstract class BasePage extends WebPage {
 	 */
 	private static final long serialVersionUID = 1L;
 	private MarkupContainer defaultModal;
+	private Image logoImg;
 	private Label title;
 	protected List<String> localeNames;
 	protected DropDownChoice<String> localeDDC;
@@ -55,6 +63,7 @@ public abstract class BasePage extends WebPage {
 
 
 	public BasePage(PageParameters params){
+		
 		super(params);
 		initPage();
 	}
@@ -67,9 +76,10 @@ public abstract class BasePage extends WebPage {
 		defaultModal = new EmptyPanel("defaultModal");
 		defaultModal.setOutputMarkupId(true);
 		add(defaultModal);
+		logoImage = new Image("logoImage", getServerConfig().getLogoImage());
+		add(logoImage);
 		title = new Label("title", "Minecraft Subscribe Service");
 		add(title);
-		getTitle().setDefaultModel(Model.of("Home Page"));
 		add(new Label("serverName",
 				Model.of(" " + serverConfig.getProperties().getProperty("serverName", "serverName key not Set"))));
 		createLocalesDCC();
@@ -115,23 +125,41 @@ public abstract class BasePage extends WebPage {
 
 	private void createLocalesDCC() {
 		List<Locale> locales = Arrays.asList(Locale.ENGLISH, new Locale("ru"));
-
+		Form ddcForm = new Form("ddcForm");
 		final DropDownChoice<Locale> localeDDCSelection = new DropDownChoice<Locale>("changeLocale",
-				new Model<Locale>(), locales, getLocalesChoiseRenderer());
+				getDDCModel(), locales, getLocalesChoiseRenderer());
 		localeDDCSelection.add(new OnChangeAjaxBehavior() {
-			/**
-			 * 
-			 */
+			
+			@Override
+			protected void onUpdate(AjaxRequestTarget target) {
+				target.add(getPage());
+			}
+			
+			
+			
+		});
+		localeDDCSelection.setModelObject(Session.get().getLocale());
+		ddcForm.add(localeDDCSelection);
+		add(ddcForm);
+	}
+	
+	private IModel<Locale> getDDCModel(){
+		return new IModel<Locale>() {
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
-				Session.get().setLocale(localeDDCSelection.getModelObject());
-				target.add(getPage());
+			public Locale getObject() {
+				return getSession().getLocale();
 			}
-		});
-		localeDDCSelection.setModelObject(Session.get().getLocale());
-		add(localeDDCSelection);
+			
+			@Override
+			public void setObject(Locale object) {
+				if (object != null) {
+					getSession().setLocale(object);
+				}
+			}
+		};
 	}
 
 	private IChoiceRenderer<Locale> getLocalesChoiseRenderer() {
@@ -190,6 +218,12 @@ public abstract class BasePage extends WebPage {
 //		response.render(CssHeaderItem.forReference(new WebjarsJavaScriptResourceReference(bootstrapSelectPrefixPath + "/dist/css/bootstrap-select.css")));
 		//response.render(CssHeaderItem.forReference(new WebjarsJavaScriptResourceReference(bootstrapPrefixPath + "/css/bootstrap-dark.css")));
 		response.render(CssHeaderItem.forReference(new CssResourceReference(BasePage.class, "../css/style.css")));
+	}
+	
+	@Override
+	protected void onBeforeRender() {
+		Application.get().getMarkupSettings().setStripWicketTags(true);
+		super.onBeforeRender();
 	}
 
 	protected ExternalPropertiesFileConfig getServerConfig() {

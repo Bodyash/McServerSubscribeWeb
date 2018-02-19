@@ -8,6 +8,7 @@ public class MinecraftUserDetailService implements UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		//throw new UsernameNotFoundException("Please, Dont Forget to rewrite MinecraftUserDetailService");
 		return null;
 	}
 
