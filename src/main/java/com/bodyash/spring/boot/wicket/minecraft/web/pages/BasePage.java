@@ -7,12 +7,7 @@ import java.util.Locale;
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
-import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxPreventSubmitBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -45,11 +40,10 @@ public abstract class BasePage extends WebPage {
 	 */
 	private static final long serialVersionUID = 1L;
 	private MarkupContainer defaultModal;
-	private Image logoImg;
 	private Label title;
 	protected List<String> localeNames;
 	protected DropDownChoice<String> localeDDC;
-	protected Image logoImage = null;
+	protected Image logoImage;
 	private Link<String> loginLink;
 	private Link<String> cabinetLink;
 	private Link<String> logoutLink;
@@ -123,13 +117,16 @@ public abstract class BasePage extends WebPage {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void createLocalesDCC() {
 		List<Locale> locales = Arrays.asList(Locale.ENGLISH, new Locale("ru"));
 		Form ddcForm = new Form("ddcForm");
 		final DropDownChoice<Locale> localeDDCSelection = new DropDownChoice<Locale>("changeLocale",
 				getDDCModel(), locales, getLocalesChoiseRenderer());
 		localeDDCSelection.add(new OnChangeAjaxBehavior() {
-			
+
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				target.add(getPage());
