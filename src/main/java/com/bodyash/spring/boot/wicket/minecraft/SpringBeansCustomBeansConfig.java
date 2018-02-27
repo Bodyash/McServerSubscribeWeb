@@ -1,5 +1,6 @@
 package com.bodyash.spring.boot.wicket.minecraft;
 
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -10,11 +11,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.bodyash.spring.boot.wicket.minecraft.beans.ExternalPropertiesFileConfig;
+import com.bodyash.spring.boot.wicket.minecraft.main.BukkitMain;
 import com.bodyash.spring.boot.wicket.minecraft.service.MinecraftUserDetailService;
 
 
-@Configuration()
-@ComponentScan("com.spring.boot.wicket.minecraft")
+@Configuration
+@ComponentScan(basePackages = {"com.spring.boot.wicket.minecraft"}, excludeFilters={
+		  @ComponentScan.Filter(type=org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE, value=BukkitMain.class)})
 public class SpringBeansCustomBeansConfig extends WebMvcConfigurerAdapter{
 	
 	private ExternalPropertiesFileConfig epfc;
@@ -37,6 +40,12 @@ public class SpringBeansCustomBeansConfig extends WebMvcConfigurerAdapter{
 		return new Md5PasswordEncoder();
 	}
 	
+    @Bean
+    public EmbeddedServletContainerCustomizer containerCustomizer() {
+        return (container -> {
+            container.setPort(8012);
+        });
+    }
 	
 	//Beans for WEB PAGES
 	@Bean(name="serverConfig")
